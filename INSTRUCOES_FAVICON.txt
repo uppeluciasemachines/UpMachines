@@ -1,0 +1,26 @@
+================================================================================
+                    INSTRUÇÕES PARA ALTERAR O FAVICON
+================================================================================
+
+O favicon é o ícone pequeno que aparece na aba do navegador.
+
+PASSO A PASSO:
+
+1. Prepare sua imagem:
+   - Tamanho recomendado: 32x32 pixels ou 64x64 pixels
+   - Formato: .ico, .png ou .svg
+   - Dica: Use um site como https://favicon.io para converter sua logo
+
+2. Substitua o arquivo:
+   - Vá até a pasta: public/
+   - Substitua o arquivo "favicon.ico" pela sua nova imagem
+   - OU adicione um novo arquivo (ex: public/minha-logo.png)
+
+3. Se você usou um nome diferente, edite o arquivo index.html:
+   - Abra o arquivo index.html na raiz do projeto
+   - Encontre a linha: <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+   - Altere para: <link rel="icon" type="image/png" href="/minha-logo.png" />
+
+4. Salve e recarregue o site!
+
+================================================================================

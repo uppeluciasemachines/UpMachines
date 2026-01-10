@@ -1,15 +1,15 @@
 /* ================================================================================
    COMPONENTE: MonteSeuEvento
    ================================================================================
-   Área interativa principal onde o cliente monta seu evento em 2 passos:
-   1. Escolhe a máquina (Grua ou Totem)
-   2. Escolhe o recheio (Pelúcias ou Bolinhas)
-   
-   Ao finalizar, envia o pedido via WhatsApp.
+   Área interativa principal onde o cliente monta seu evento:
+   1. Escolhe um ou mais itens (Máquinas/Gruas e/ou Totem)
+   2. Se escolher máquina/grua, escolhe os brindes (Brindes ou Bolinhas)
+   3. Se escolher apenas totem, vai direto para o orçamento
+   4. Envia o pedido via WhatsApp
    
    INSTRUÇÕES PARA ADICIONAR PRODUTOS:
    1. Importe suas imagens: import minhaMaquina from "@/assets/maquina1.jpg";
-   2. Adicione no array correspondente (maquinas ou recheios)
+   2. Adicione no array correspondente (maquinas ou brindes)
    
    INSTRUÇÕES PARA ALTERAR O NÚMERO DO WHATSAPP:
    1. Procure a variável NUMERO_WHATSAPP abaixo
@@ -29,7 +29,7 @@ import Bolas from "@/assets/bolas-transparentes.webp";
 
 // ===== NÚMERO DO WHATSAPP =====
 // Altere para o número da empresa (com código do país e DDD, sem espaços ou traços)
-const NUMERO_WHATSAPP = "5511999999999";
+const NUMERO_WHATSAPP = "+5586994083920";
 
 // ===== DADOS DAS MÁQUINAS =====
 // Adicione suas máquinas aqui. Cada máquina precisa de: id, nome, imagem, descricao, categoria
@@ -39,35 +39,35 @@ const maquinas = [
     nome: "Grua Tv Box",
     // Substitua pela sua imagem: import minhaImagem from "@/assets/maquina.jpg"
     imagem: GruaTvBox,
-    descricao: "Descrição da máquina - características e diferenciais",
+    descricao: "Maquina grande, com uma tela personalizavel.",
     categoria: "grua",
   },
   {
     id: 2,
     nome: "Grua Compacta Led",
     imagem: GruaLedCompt,
-    descricao: "Descrição da máquina - características e diferenciais",
+    descricao: "Maquina compacta com painel de led personalizavel.",
     categoria: "grua",
   },
   {
     id: 3,
     nome: "Grua Led",
     imagem: GruaLed,
-    descricao: "Descrição da máquina - características e diferenciais",
+    descricao: "Maquina toda envolvida por leds.",
     categoria: "grua",
   },
   {
     id: 4,
     nome: "Totem de Carregamento",
     imagem: Totem,
-    descricao: "Descrição da máquina - características e diferenciais",
+    descricao: "Totem de carregamento de aparelhos celulares.",
     categoria: "totem",
   },
 ];
 
-// ===== DADOS DOS RECHEIOS =====
-// Adicione seus recheios aqui
-const recheios = [
+// ===== DADOS DOS BRINDES =====
+// Adicione seus brindes aqui
+const brindes = [
   {
     id: 1,
     nome: "Pelúcias de Personagens",
@@ -103,8 +103,8 @@ interface Maquina {
   categoria: string;
 }
 
-// Tipo para o recheio selecionado
-interface Recheio {
+// Tipo para o brinde selecionado
+interface Brinde {
   id: number;
   nome: string;
   imagem: string;
@@ -113,37 +113,97 @@ interface Recheio {
 
 const MonteSeuEvento = () => {
   // ===== ESTADOS DO COMPONENTE =====
-  const [passoAtual, setPassoAtual] = useState(1); // Controla qual passo está ativo
-  const [maquinaSelecionada, setMaquinaSelecionada] = useState<Maquina | null>(null);
-  const [recheioSelecionado, setRecheioSelecionado] = useState<Recheio | null>(null);
+  const [passoAtual, setPassoAtual] = useState(1); // Controla qual passo está ativo (1: máquinas, 2: brindes, 3: orçamento)
+  const [maquinasSelecionadas, setMaquinasSelecionadas] = useState<Maquina[]>([]); // Array de máquinas selecionadas
+  const [brindeSelecionado, setBrindeSelecionado] = useState<Brinde | null>(null);
   const [maquinaEspiando, setMaquinaEspiando] = useState<Maquina | null>(null); // Para o Quick View
+
+  // Funções auxiliares para verificar tipos de seleções
+  const temGrua = () => maquinasSelecionadas.some(m => m.categoria === "grua");
+  const temTotem = () => maquinasSelecionadas.some(m => m.categoria === "totem");
 
   // ===== FUNÇÃO PARA ENVIAR PEDIDO VIA WHATSAPP =====
   const enviarParaWhatsApp = () => {
-    if (!maquinaSelecionada || !recheioSelecionado) return;
+    if (maquinasSelecionadas.length === 0) return;
 
-    // Monta a mensagem que será enviada
-    const mensagem = `Olá! Gostaria de alugar a máquina *${maquinaSelecionada.nome}* com recheio de *${recheioSelecionado.nome}*.`;
+    // Monta a mensagem baseada nas seleções
+    let mensagem = "Olá! Gostaria de solicitar um orçamento para:\n\n";
+    
+    // Adiciona máquinas/gruas selecionadas
+    const gruas = maquinasSelecionadas.filter(m => m.categoria === "grua");
+    if (gruas.length > 0) {
+      mensagem += "*Máquinas/Gruas:*\n";
+      gruas.forEach(maquina => {
+        mensagem += `• ${maquina.nome}\n`;
+      });
+      mensagem += "\n";
+    }
+
+    // Adiciona totem se houver
+    const totems = maquinasSelecionadas.filter(m => m.categoria === "totem");
+    if (totems.length > 0) {
+      mensagem += "*Totens de Carregamento:*\n";
+      totems.forEach(maquina => {
+        mensagem += `• ${maquina.nome}\n`;
+      });
+      mensagem += "\n";
+    }
+
+    // Adiciona brindes se houver (só aparece se tem grua)
+    if (brindeSelecionado && temGrua()) {
+      mensagem += `*Brindes escolhidos:* ${brindeSelecionado.nome}\n`;
+    }
     
     // Codifica a mensagem para URL
     const mensagemCodificada = encodeURIComponent(mensagem);
     
     // Abre o WhatsApp com a mensagem
-    window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensagemCodificada}`, "_blank");
+    window.open(`https://wa.me/${NUMERO_WHATSAPP.replace(/\D/g, '')}?text=${mensagemCodificada}`, "_blank");
   };
 
-  // ===== FUNÇÃO PARA SELECIONAR MÁQUINA E IR PARA PASSO 2 =====
-  const selecionarMaquina = (maquina: Maquina) => {
-    setMaquinaSelecionada(maquina);
-    setPassoAtual(2);
+  // ===== FUNÇÃO PARA TOGGLE DE SELEÇÃO DE MÁQUINA =====
+  const toggleSelecaoMaquina = (maquina: Maquina) => {
+    setMaquinasSelecionadas(prev => {
+      const jaSelecionada = prev.some(m => m.id === maquina.id);
+      if (jaSelecionada) {
+        // Remove se já está selecionada
+        return prev.filter(m => m.id !== maquina.id);
+      } else {
+        // Adiciona se não está selecionada
+        return [...prev, maquina];
+      }
+    });
+  };
+
+  // ===== FUNÇÃO PARA CONTINUAR =====
+  const continuar = () => {
+    if (maquinasSelecionadas.length === 0) return;
+
+    // Se tem grua (com ou sem totem), vai para escolha de brindes
+    if (temGrua()) {
+      setPassoAtual(2);
+    } 
+    // Se tem apenas totem, vai direto para orçamento (passo 3)
+    else if (temTotem() && !temGrua()) {
+      setPassoAtual(3);
+    }
+
     // Rola para o topo da seção
     document.getElementById("monte-seu-evento")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // ===== FUNÇÃO PARA AVANÇAR PARA ORÇAMENTO APÓS ESCOLHER BRINDES =====
+  const avancarParaOrcamento = () => {
+    if (brindeSelecionado) {
+      setPassoAtual(3);
+      document.getElementById("monte-seu-evento")?.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   // ===== FUNÇÃO PARA VOLTAR AO PASSO 1 =====
   const voltarPasso1 = () => {
     setPassoAtual(1);
-    setRecheioSelecionado(null);
+    setBrindeSelecionado(null);
   };
 
   return (
@@ -155,12 +215,12 @@ const MonteSeuEvento = () => {
             Monte seu <span className="text-primary">Evento</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Escolha a máquina e o recheio perfeitos para sua festa!
+            Escolha a máquina e os brindes perfeitos para sua festa!
           </p>
         </div>
 
         {/* ===== INDICADOR DE PASSOS ===== */}
-        <div className="flex justify-center items-center gap-4 mb-12">
+        <div className="flex justify-center items-center gap-4 mb-12 flex-wrap">
           <div
             className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all ${
               passoAtual === 1
@@ -169,33 +229,50 @@ const MonteSeuEvento = () => {
             }`}
           >
             <span className="w-8 h-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-              {maquinaSelecionada ? <Check size={16} /> : "1"}
+              {maquinasSelecionadas.length > 0 ? <Check size={16} /> : "1"}
             </span>
-            Escolha a Máquina
+            Escolha os Itens
           </div>
-          <ArrowRight className="text-muted-foreground" />
-          <div
-            className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all ${
-              passoAtual === 2
-                ? "bg-primary text-primary-foreground"
-                : "bg-card text-muted-foreground"
-            }`}
-          >
-            <span className="w-8 h-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-              {recheioSelecionado ? <Check size={16} /> : "2"}
-            </span>
-            Escolha o Recheio
-          </div>
+          {temGrua() && (
+            <>
+              <ArrowRight className="text-muted-foreground" />
+              <div
+                className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all ${
+                  passoAtual === 2
+                    ? "bg-primary text-primary-foreground"
+                    : passoAtual > 2 && brindeSelecionado
+                    ? "bg-card text-muted-foreground"
+                    : "bg-card text-muted-foreground"
+                }`}
+              >
+                <span className="w-8 h-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
+                  {brindeSelecionado ? <Check size={16} /> : "2"}
+                </span>
+                Escolha os Brindes
+              </div>
+            </>
+          )}
+          {(passoAtual === 3 || (temTotem() && !temGrua())) && (
+            <>
+              <ArrowRight className="text-muted-foreground" />
+              <div className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-primary text-primary-foreground">
+                <span className="w-8 h-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
+                  3
+                </span>
+                Enviar Orçamento
+              </div>
+            </>
+          )}
         </div>
 
-        {/* ===== PASSO 1: ESCOLHER MÁQUINA ===== */}
+        {/* ===== PASSO 1: ESCOLHER MÁQUINAS/TOTEM ===== */}
         {passoAtual === 1 && (
           <div className="animate-fade-in">
             {/* Seção Gruas */}
             <div id="gruas" className="mb-12">
               <h3 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
                 <span className="w-2 h-8 bg-primary rounded-full"></span>
-                Gruas de Pelúcia
+                Gruas de Brindes
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {maquinas
@@ -204,8 +281,9 @@ const MonteSeuEvento = () => {
                     <CardMaquina
                       key={maquina.id}
                       maquina={maquina}
+                      selecionada={maquinasSelecionadas.some(m => m.id === maquina.id)}
                       onEspiar={() => setMaquinaEspiando(maquina)}
-                      onSelecionar={() => selecionarMaquina(maquina)}
+                      onSelecionar={() => toggleSelecaoMaquina(maquina)}
                     />
                   ))}
               </div>
@@ -224,17 +302,53 @@ const MonteSeuEvento = () => {
                     <CardMaquina
                       key={maquina.id}
                       maquina={maquina}
+                      selecionada={maquinasSelecionadas.some(m => m.id === maquina.id)}
                       onEspiar={() => setMaquinaEspiando(maquina)}
-                      onSelecionar={() => selecionarMaquina(maquina)}
+                      onSelecionar={() => toggleSelecaoMaquina(maquina)}
                     />
                   ))}
               </div>
             </div>
+
+            {/* Botão Continuar - aparece quando houver seleções */}
+            {maquinasSelecionadas.length > 0 && (
+              <div className="mt-12 text-center animate-slide-up">
+                <div className="bg-card rounded-xl p-6 max-w-xl mx-auto">
+                  <h3 className="text-xl font-bold text-foreground mb-4">
+                    {maquinasSelecionadas.length} {maquinasSelecionadas.length === 1 ? "item selecionado" : "itens selecionados"}
+                  </h3>
+                  <div className="flex items-center justify-center gap-2 mb-6 flex-wrap">
+                    {maquinasSelecionadas.map((maquina, index) => (
+                      <div key={maquina.id} className="bg-muted rounded-lg p-2 flex items-center gap-2">
+                        <img
+                          src={maquina.imagem}
+                          alt={maquina.nome}
+                          className="w-10 h-10 rounded object-contain"
+                        />
+                        <span className="font-medium text-foreground text-xs">
+                          {maquina.nome}
+                        </span>
+                        {index < maquinasSelecionadas.length - 1 && (
+                          <span className="text-primary font-bold mx-1">+</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={continuar}
+                    className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all hover:scale-105 flex items-center gap-3 mx-auto"
+                  >
+                    Continuar
+                    <ArrowRight size={20} />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
-        {/* ===== PASSO 2: ESCOLHER RECHEIO ===== */}
-        {passoAtual === 2 && (
+        {/* ===== PASSO 2: ESCOLHER BRINDES ===== */}
+        {passoAtual === 2 && temGrua() && (
           <div className="animate-fade-in">
             {/* Botão Voltar */}
             <button
@@ -242,97 +356,186 @@ const MonteSeuEvento = () => {
               className="flex items-center gap-2 text-primary hover:text-primary/80 mb-6 font-medium"
             >
               <ArrowLeft size={20} />
-              Voltar para máquinas
+              Voltar para escolha de itens
             </button>
 
-            {/* Máquina selecionada */}
-            <div className="bg-card rounded-xl p-4 mb-8 flex items-center gap-4">
-              <img
-                src={maquinaSelecionada?.imagem}
-                alt={maquinaSelecionada?.nome}
-                className="w-20 aspect -[4/3] rounded-lg object-contain bg-muted p-1"
-              />
-              <div>
-                <p className="text-sm text-muted-foreground">Máquina selecionada:</p>
-                <p className="font-bold text-foreground">{maquinaSelecionada?.nome}</p>
+            {/* Máquinas selecionadas */}
+            <div className="bg-card rounded-xl p-4 mb-8">
+              <p className="text-sm text-muted-foreground mb-3">Itens selecionados:</p>
+              <div className="flex flex-wrap gap-3">
+                {maquinasSelecionadas.map((maquina) => (
+                  <div key={maquina.id} className="flex items-center gap-2 bg-muted rounded-lg p-2">
+                    <img
+                      src={maquina.imagem}
+                      alt={maquina.nome}
+                      className="w-16 h-16 rounded-lg object-contain bg-background p-1"
+                    />
+                    <div>
+                      <p className="font-bold text-foreground text-sm">{maquina.nome}</p>
+                      <p className="text-xs text-muted-foreground capitalize">{maquina.categoria}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Grid de recheios */}
+            {/* Grid de brindes */}
             <h3 className="text-2xl font-bold text-foreground mb-6">
-              Agora escolha o recheio:
+              Agora escolha os brindes da Máquina:
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {recheios.map((recheio) => (
+              {brindes.map((brinde) => (
                 <div
-                  key={recheio.id}
-                  onClick={() => setRecheioSelecionado(recheio)}
+                  key={brinde.id}
+                  onClick={() => setBrindeSelecionado(brinde)}
                   className={`bg-card rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 ${
-                    recheioSelecionado?.id === recheio.id
+                    brindeSelecionado?.id === brinde.id
                       ? "ring-4 ring-primary"
                       : ""
                   }`}
                 >
                   <div className="relative">
                     <img
-                      src={recheio.imagem}
-                      alt={recheio.nome}
+                      src={brinde.imagem}
+                      alt={brinde.nome}
                       className="w-full h-48 object-cover"
                     />
-                    {recheioSelecionado?.id === recheio.id && (
+                    {brindeSelecionado?.id === brinde.id && (
                       <div className="absolute top-4 right-4 bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center">
                         <Check size={20} />
                       </div>
                     )}
                   </div>
                   <div className="p-4">
-                    <h4 className="font-bold text-foreground mb-1">{recheio.nome}</h4>
-                    <p className="text-sm text-muted-foreground">{recheio.descricao}</p>
+                    <h4 className="font-bold text-foreground mb-1">{brinde.nome}</h4>
+                    <p className="text-sm text-muted-foreground">{brinde.descricao}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Botão de enviar para WhatsApp */}
-            {recheioSelecionado && (
+            {/* Botão de continuar após escolher brindes */}
+            {brindeSelecionado && (
               <div className="mt-12 text-center animate-slide-up">
-                <div className="bg-card rounded-xl p-8 max-w-xl mx-auto">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">
-                    Seu evento está montado!
-                  </h3>
-                  <div className="flex items-center justify-center gap-4 mb-6 flex-wrap">
-                    <div className="bg-muted rounded-lg p-3 flex items-center gap-2">
-                      <img
-                        src={maquinaSelecionada?.imagem}
-                        alt={maquinaSelecionada?.nome}
-                        className="w-12 h-12 rounded object-cover"
-                      />
-                      <span className="font-medium text-foreground text-sm">
-                        {maquinaSelecionada?.nome}
-                      </span>
-                    </div>
-                    <span className="text-primary font-bold">+</span>
-                    <div className="bg-muted rounded-lg p-3 flex items-center gap-2">
-                      <img
-                        src={recheioSelecionado.imagem}
-                        alt={recheioSelecionado.nome}
-                        className="w-12 h-12 rounded object-cover"
-                      />
-                      <span className="font-medium text-foreground text-sm">
-                        {recheioSelecionado.nome}
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={enviarParaWhatsApp}
-                    className="bg-[#25D366] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#22c55e] transition-all hover:scale-105 flex items-center gap-3 mx-auto"
-                  >
-                    <MessageCircle size={24} />
-                    Enviar Orçamento via WhatsApp
-                  </button>
-                </div>
+                <button
+                  onClick={avancarParaOrcamento}
+                  className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all hover:scale-105 flex items-center gap-3 mx-auto"
+                >
+                  Continuar para Orçamento
+                  <ArrowRight size={20} />
+                </button>
               </div>
             )}
+          </div>
+        )}
+
+        {/* ===== PASSO 3: ENVIAR ORÇAMENTO ===== */}
+        {passoAtual === 3 && (
+          <div className="animate-fade-in">
+            {/* Botão Voltar */}
+            {temGrua() ? (
+              <button
+                onClick={() => setPassoAtual(2)}
+                className="flex items-center gap-2 text-primary hover:text-primary/80 mb-6 font-medium"
+              >
+                <ArrowLeft size={20} />
+                Voltar para escolha de brindes
+              </button>
+            ) : (
+              <button
+                onClick={voltarPasso1}
+                className="flex items-center gap-2 text-primary hover:text-primary/80 mb-6 font-medium"
+              >
+                <ArrowLeft size={20} />
+                Voltar para escolha de itens
+              </button>
+            )}
+
+            {/* Resumo do evento */}
+            <div className="mt-12 text-center animate-slide-up">
+              <div className="bg-card rounded-xl p-8 max-w-2xl mx-auto">
+                <h3 className="text-2xl font-bold text-foreground mb-6">
+                  Seu evento está montado!
+                </h3>
+                
+                {/* Itens selecionados */}
+                <div className="mb-6 space-y-3">
+                  {maquinasSelecionadas.filter(m => m.categoria === "grua").length > 0 && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-2 text-left">Máquinas/Gruas:</p>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {maquinasSelecionadas
+                          .filter(m => m.categoria === "grua")
+                          .map((maquina) => (
+                            <div key={maquina.id} className="bg-muted rounded-lg p-3 flex items-center gap-2">
+                              <img
+                                src={maquina.imagem}
+                                alt={maquina.nome}
+                                className="w-12 h-12 rounded object-contain"
+                              />
+                              <span className="font-medium text-foreground text-sm">
+                                {maquina.nome}
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {maquinasSelecionadas.filter(m => m.categoria === "totem").length > 0 && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-2 text-left">Totens:</p>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {maquinasSelecionadas
+                          .filter(m => m.categoria === "totem")
+                          .map((maquina) => (
+                            <div key={maquina.id} className="bg-muted rounded-lg p-3 flex items-center gap-2">
+                              <img
+                                src={maquina.imagem}
+                                alt={maquina.nome}
+                                className="w-12 h-12 rounded object-contain"
+                              />
+                              <span className="font-medium text-foreground text-sm">
+                                {maquina.nome}
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {brindeSelecionado && temGrua() && (
+                    <>
+                      <div className="flex items-center justify-center my-4">
+                        <span className="text-primary font-bold text-xl">+</span>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-2 text-left">Brindes:</p>
+                        <div className="bg-muted rounded-lg p-3 flex items-center gap-2 justify-center">
+                          <img
+                            src={brindeSelecionado.imagem}
+                            alt={brindeSelecionado.nome}
+                            className="w-12 h-12 rounded object-cover"
+                          />
+                          <span className="font-medium text-foreground text-sm">
+                            {brindeSelecionado.nome}
+                          </span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Botão de enviar para WhatsApp */}
+                <button
+                  onClick={enviarParaWhatsApp}
+                  className="bg-[#25D366] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#22c55e] transition-all hover:scale-105 flex items-center gap-3 mx-auto"
+                >
+                  <MessageCircle size={24} />
+                  Enviar Orçamento via WhatsApp
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -366,12 +569,12 @@ const MonteSeuEvento = () => {
                 </button>
                 <button
                   onClick={() => {
-                    selecionarMaquina(maquinaEspiando);
+                    toggleSelecaoMaquina(maquinaEspiando);
                     setMaquinaEspiando(null);
                   }}
                   className="flex-1 bg-primary text-primary-foreground px-4 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
                 >
-                  Selecionar
+                  {maquinasSelecionadas.some(m => m.id === maquinaEspiando.id) ? "Desmarcar" : "Selecionar"}
                 </button>
               </div>
             </div>
@@ -389,14 +592,17 @@ const MonteSeuEvento = () => {
    ================================================================================ */
 interface CardMaquinaProps {
   maquina: Maquina;
+  selecionada?: boolean;
   onEspiar: () => void;
   onSelecionar: () => void;
 }
 
-const CardMaquina = ({ maquina, onEspiar, onSelecionar }: CardMaquinaProps) => {
+const CardMaquina = ({ maquina, selecionada = false, onEspiar, onSelecionar }: CardMaquinaProps) => {
   return (
-    <div className="bg-card rounded-xl overflow-hidden transition-all hover:-translate-y-1 group
-        shadow-[0_-6px_12px_-6px_rgba(0,0,0,0.25)] hover:shadow-[0_-8px_20px_-8px_rgba(0,0,0,0.35)]">
+    <div className={`bg-card rounded-xl overflow-hidden transition-all hover:-translate-y-1 group
+        shadow-[0_-6px_12px_-6px_rgba(0,0,0,0.25)] hover:shadow-[0_-8px_20px_-8px_rgba(0,0,0,0.35)] ${
+          selecionada ? "ring-4 ring-primary" : ""
+        }`}>
       {/* Imagem */}
       <div className="relative overflow-hidden">
         <img
@@ -412,6 +618,12 @@ const CardMaquina = ({ maquina, onEspiar, onSelecionar }: CardMaquinaProps) => {
         >
           <Eye size={20} />
         </button>
+        {/* Indicador de seleção */}
+        {selecionada && (
+          <div className="absolute top-4 left-4 bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center">
+            <Check size={20} />
+          </div>
+        )}
       </div>
       
       {/* Conteúdo */}
@@ -419,9 +631,13 @@ const CardMaquina = ({ maquina, onEspiar, onSelecionar }: CardMaquinaProps) => {
         <h4 className="font-bold text-foreground text-lg mb-3">{maquina.nome}</h4>
         <button
           onClick={onSelecionar}
-          className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+          className={`w-full py-3 rounded-lg font-medium transition-colors ${
+            selecionada
+              ? "bg-secondary text-secondary-foreground hover:bg-secondary/90"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
+          }`}
         >
-          Selecionar
+          {selecionada ? "Desmarcar" : "Selecionar"}
         </button>
       </div>
     </div>

@@ -13,7 +13,7 @@ import { MessageCircle } from "lucide-react";
 // ===== NÚMERO DO WHATSAPP =====
 // Formato: código do país + DDD + número (sem espaços ou traços)
 // Exemplo Brasil: 5511999999999
-const NUMERO_WHATSAPP = "5511999999999";
+const NUMERO_WHATSAPP = "+5586994083920";
 
 // Mensagem padrão que será enviada
 const MENSAGEM_PADRAO = "Olá! Gostaria de mais informações sobre locação de máquinas para eventos.";
@@ -22,7 +22,7 @@ const WhatsAppButton = () => {
   // Função para abrir o WhatsApp
   const abrirWhatsApp = () => {
     const mensagemCodificada = encodeURIComponent(MENSAGEM_PADRAO);
-    window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensagemCodificada}`, "_blank");
+    window.open(`https://wa.me/${+5586994083920}?text=${mensagemCodificada}`, "_blank");
   };
 
   return (

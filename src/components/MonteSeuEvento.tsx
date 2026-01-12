@@ -2,8 +2,8 @@
    COMPONENTE: MonteSeuEvento
    ================================================================================
    Área interativa principal onde o cliente monta seu evento:
-   1. Escolhe um ou mais itens (Máquinas/Gruas e/ou Totem)
-   2. Se escolher máquina/grua, escolhe os brindes (Brindes ou Bolinhas)
+   1. Escolhe um ou mais itens (Máquinas e/ou Totem)
+   2. Se escolher máquina, escolhe os brindes (brindes ou bolinhas)
    3. Se escolher apenas totem, vai direto para o orçamento
    4. Envia o pedido via WhatsApp
    
@@ -19,7 +19,7 @@
 import { useState } from "react";
 import { Eye, Check, MessageCircle, ArrowRight, ArrowLeft } from "lucide-react";
 import GruaTvBox from "@/assets/grua tv box.jpg";
-import GruaLedCompt from "@/assets/GRUA COMPACTA LED.jpg"
+import GruaLedCompt from "@/assets/GRUA COMPACTA LED.jpg";
 import GruaLed from "@/assets/grua led.jpg";
 import Totem from "@/assets/Totem de carregamento.jpg";
 import Peluciascomum from "@/assets/pelucias_comuns.png";
@@ -36,25 +36,25 @@ const NUMERO_WHATSAPP = "+5586994083920";
 const maquinas = [
   {
     id: 1,
-    nome: "Grua Tv Box",
+    nome: "Máquina Tv Box",
     // Substitua pela sua imagem: import minhaImagem from "@/assets/maquina.jpg"
     imagem: GruaTvBox,
     descricao: "Maquina grande, com uma tela personalizavel.",
-    categoria: "grua",
+    categoria: "maquina",
   },
   {
     id: 2,
-    nome: "Grua Compacta Led",
+    nome: "Máquina Compacta Led",
     imagem: GruaLedCompt,
     descricao: "Maquina compacta com painel de led personalizavel.",
-    categoria: "grua",
+    categoria: "maquina",
   },
   {
     id: 3,
-    nome: "Grua Led",
+    nome: "Máquina Led",
     imagem: GruaLed,
     descricao: "Maquina toda envolvida por leds.",
-    categoria: "grua",
+    categoria: "maquina",
   },
   {
     id: 4,
@@ -70,21 +70,21 @@ const maquinas = [
 const brindes = [
   {
     id: 1,
-    nome: "Pelúcias de Personagens",
+    nome: "Pelúcias Nacionais",
     imagem: Peluciaspersonagens,
-    descricao: "Personagens de cinema mais adoraveis!",
+    descricao: "Modelos variados de pelúcias nacionais",
   },
   {
     id: 2,
-    nome: "Pelúcias Normais",
+    nome: "Pelúcias Premium",
     imagem: Peluciascomum,
-    descricao: "Modelos variados de pelúcias fofinhas",
+    descricao: "Modelos variados de pelúcias Premium",
   },
   {
     id: 3,
-    nome: "Pelúcias de super Herois",
+    nome: "Pelúcias Personalizadas",
     imagem: PeluciasHerois,
-    descricao: "Os heróis mais amados em pelúcias",
+    descricao: "Escolha as Pelúcias do seu jeito",
   },
   {
     id: 4,
@@ -115,11 +115,11 @@ const MonteSeuEvento = () => {
   // ===== ESTADOS DO COMPONENTE =====
   const [passoAtual, setPassoAtual] = useState(1); // Controla qual passo está ativo (1: máquinas, 2: brindes, 3: orçamento)
   const [maquinasSelecionadas, setMaquinasSelecionadas] = useState<Maquina[]>([]); // Array de máquinas selecionadas
-  const [brindeSelecionado, setBrindeSelecionado] = useState<Brinde | null>(null);
+  const [brindesSelecionados, setBrindesSelecionados] = useState<Brinde[]>([]);
   const [maquinaEspiando, setMaquinaEspiando] = useState<Maquina | null>(null); // Para o Quick View
 
   // Funções auxiliares para verificar tipos de seleções
-  const temGrua = () => maquinasSelecionadas.some(m => m.categoria === "grua");
+  const temMaquina = () => maquinasSelecionadas.some(m => m.categoria === "maquina");
   const temTotem = () => maquinasSelecionadas.some(m => m.categoria === "totem");
 
   // ===== FUNÇÃO PARA ENVIAR PEDIDO VIA WHATSAPP =====
@@ -129,11 +129,11 @@ const MonteSeuEvento = () => {
     // Monta a mensagem baseada nas seleções
     let mensagem = "Olá! Gostaria de solicitar um orçamento para:\n\n";
     
-    // Adiciona máquinas/gruas selecionadas
-    const gruas = maquinasSelecionadas.filter(m => m.categoria === "grua");
-    if (gruas.length > 0) {
-      mensagem += "*Máquinas/Gruas:*\n";
-      gruas.forEach(maquina => {
+    // Adiciona máquinas selecionadas
+    const maquinas = maquinasSelecionadas.filter(m => m.categoria === "maquina");
+    if (maquinas.length > 0) {
+      mensagem += "*Máquinas:*\n";
+      maquinas.forEach(maquina => {
         mensagem += `• ${maquina.nome}\n`;
       });
       mensagem += "\n";
@@ -149,9 +149,12 @@ const MonteSeuEvento = () => {
       mensagem += "\n";
     }
 
-    // Adiciona brindes se houver (só aparece se tem grua)
-    if (brindeSelecionado && temGrua()) {
-      mensagem += `*Brindes escolhidos:* ${brindeSelecionado.nome}\n`;
+    // Adiciona brindes se houver (só aparece se tem máquina)
+    if (brindesSelecionados.length > 0 && temMaquina()) {
+      mensagem += "*Brindes escolhidos:*\n";
+      brindesSelecionados.forEach((brinde) => {
+        mensagem += `• ${brinde.nome}\n`;
+      });
     }
     
     // Codifica a mensagem para URL
@@ -165,13 +168,22 @@ const MonteSeuEvento = () => {
   const toggleSelecaoMaquina = (maquina: Maquina) => {
     setMaquinasSelecionadas(prev => {
       const jaSelecionada = prev.some(m => m.id === maquina.id);
-      if (jaSelecionada) {
-        // Remove se já está selecionada
-        return prev.filter(m => m.id !== maquina.id);
-      } else {
-        // Adiciona se não está selecionada
-        return [...prev, maquina];
+      const atualizado = jaSelecionada ? prev.filter(m => m.id !== maquina.id) : [...prev, maquina];
+      if (atualizado.every((m) => m.categoria !== "maquina")) {
+        setBrindesSelecionados([]);
       }
+      return atualizado;
+    });
+  };
+
+  // ===== FUNÇÃO PARA TOGGLE DE SELEÇÃO DE BRINDE =====
+  const toggleSelecaoBrinde = (brinde: Brinde) => {
+    setBrindesSelecionados((prev) => {
+      const jaSelecionado = prev.some((b) => b.id === brinde.id);
+      if (jaSelecionado) {
+        return prev.filter((b) => b.id !== brinde.id);
+      }
+      return [...prev, brinde];
     });
   };
 
@@ -179,12 +191,12 @@ const MonteSeuEvento = () => {
   const continuar = () => {
     if (maquinasSelecionadas.length === 0) return;
 
-    // Se tem grua (com ou sem totem), vai para escolha de brindes
-    if (temGrua()) {
+    // Se tem máquina (com ou sem totem), vai para escolha de brindes
+    if (temMaquina()) {
       setPassoAtual(2);
     } 
     // Se tem apenas totem, vai direto para orçamento (passo 3)
-    else if (temTotem() && !temGrua()) {
+    else if (temTotem() && !temMaquina()) {
       setPassoAtual(3);
     }
 
@@ -194,7 +206,7 @@ const MonteSeuEvento = () => {
 
   // ===== FUNÇÃO PARA AVANÇAR PARA ORÇAMENTO APÓS ESCOLHER BRINDES =====
   const avancarParaOrcamento = () => {
-    if (brindeSelecionado) {
+    if (brindesSelecionados.length > 0 || temTotem()) {
       setPassoAtual(3);
       document.getElementById("monte-seu-evento")?.scrollIntoView({ behavior: "smooth" });
     }
@@ -203,7 +215,7 @@ const MonteSeuEvento = () => {
   // ===== FUNÇÃO PARA VOLTAR AO PASSO 1 =====
   const voltarPasso1 = () => {
     setPassoAtual(1);
-    setBrindeSelecionado(null);
+    setBrindesSelecionados([]);
   };
 
   return (
@@ -233,26 +245,26 @@ const MonteSeuEvento = () => {
             </span>
             Escolha os Itens
           </div>
-          {temGrua() && (
+          {temMaquina() && (
             <>
               <ArrowRight className="text-muted-foreground" />
               <div
                 className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all ${
                   passoAtual === 2
                     ? "bg-primary text-primary-foreground"
-                    : passoAtual > 2 && brindeSelecionado
+                    : passoAtual > 2 && brindesSelecionados.length > 0
                     ? "bg-card text-muted-foreground"
                     : "bg-card text-muted-foreground"
                 }`}
               >
                 <span className="w-8 h-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-                  {brindeSelecionado ? <Check size={16} /> : "2"}
+                  {brindesSelecionados.length > 0 ? <Check size={16} /> : "2"}
                 </span>
                 Escolha os Brindes
               </div>
             </>
           )}
-          {(passoAtual === 3 || (temTotem() && !temGrua())) && (
+          {(passoAtual === 3 || (temTotem() && !temMaquina())) && (
             <>
               <ArrowRight className="text-muted-foreground" />
               <div className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-primary text-primary-foreground">
@@ -268,15 +280,15 @@ const MonteSeuEvento = () => {
         {/* ===== PASSO 1: ESCOLHER MÁQUINAS/TOTEM ===== */}
         {passoAtual === 1 && (
           <div className="animate-fade-in">
-            {/* Seção Gruas */}
-            <div id="gruas" className="mb-12">
+            {/* Seção Máquinas */}
+            <div id="maquinas" className="mb-12">
               <h3 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
                 <span className="w-2 h-8 bg-primary rounded-full"></span>
-                Gruas de Brindes
+                Máquinas
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {maquinas
-                  .filter((m) => m.categoria === "grua")
+                  .filter((m) => m.categoria === "maquina")
                   .map((maquina) => (
                     <CardMaquina
                       key={maquina.id}
@@ -293,7 +305,7 @@ const MonteSeuEvento = () => {
             <div id="totems">
               <h3 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
                 <span className="w-2 h-8 bg-primary rounded-full"></span>
-                Totems de Carregamento
+                Totens de Carregamento
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {maquinas
@@ -348,7 +360,7 @@ const MonteSeuEvento = () => {
         )}
 
         {/* ===== PASSO 2: ESCOLHER BRINDES ===== */}
-        {passoAtual === 2 && temGrua() && (
+        {passoAtual === 2 && temMaquina() && (
           <div className="animate-fade-in">
             {/* Botão Voltar */}
             <button
@@ -387,9 +399,9 @@ const MonteSeuEvento = () => {
               {brindes.map((brinde) => (
                 <div
                   key={brinde.id}
-                  onClick={() => setBrindeSelecionado(brinde)}
+                  onClick={() => toggleSelecaoBrinde(brinde)}
                   className={`bg-card rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 ${
-                    brindeSelecionado?.id === brinde.id
+                    brindesSelecionados.some((b) => b.id === brinde.id)
                       ? "ring-4 ring-primary"
                       : ""
                   }`}
@@ -400,7 +412,7 @@ const MonteSeuEvento = () => {
                       alt={brinde.nome}
                       className="w-full h-48 object-cover"
                     />
-                    {brindeSelecionado?.id === brinde.id && (
+                    {brindesSelecionados.some((b) => b.id === brinde.id) && (
                       <div className="absolute top-4 right-4 bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center">
                         <Check size={20} />
                       </div>
@@ -415,7 +427,7 @@ const MonteSeuEvento = () => {
             </div>
 
             {/* Botão de continuar após escolher brindes */}
-            {brindeSelecionado && (
+            {brindesSelecionados.length > 0 && (
               <div className="mt-12 text-center animate-slide-up">
                 <button
                   onClick={avancarParaOrcamento}
@@ -433,7 +445,7 @@ const MonteSeuEvento = () => {
         {passoAtual === 3 && (
           <div className="animate-fade-in">
             {/* Botão Voltar */}
-            {temGrua() ? (
+            {temMaquina() ? (
               <button
                 onClick={() => setPassoAtual(2)}
                 className="flex items-center gap-2 text-primary hover:text-primary/80 mb-6 font-medium"
@@ -460,12 +472,12 @@ const MonteSeuEvento = () => {
                 
                 {/* Itens selecionados */}
                 <div className="mb-6 space-y-3">
-                  {maquinasSelecionadas.filter(m => m.categoria === "grua").length > 0 && (
+                  {maquinasSelecionadas.filter(m => m.categoria === "maquina").length > 0 && (
                     <div>
-                      <p className="text-sm text-muted-foreground mb-2 text-left">Máquinas/Gruas:</p>
+                      <p className="text-sm text-muted-foreground mb-2 text-left">Máquinas:</p>
                       <div className="flex flex-wrap gap-2 justify-center">
                         {maquinasSelecionadas
-                          .filter(m => m.categoria === "grua")
+                          .filter(m => m.categoria === "maquina")
                           .map((maquina) => (
                             <div key={maquina.id} className="bg-muted rounded-lg p-3 flex items-center gap-2">
                               <img
@@ -504,22 +516,26 @@ const MonteSeuEvento = () => {
                     </div>
                   )}
 
-                  {brindeSelecionado && temGrua() && (
+                  {brindesSelecionados.length > 0 && temMaquina() && (
                     <>
                       <div className="flex items-center justify-center my-4">
                         <span className="text-primary font-bold text-xl">+</span>
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground mb-2 text-left">Brindes:</p>
-                        <div className="bg-muted rounded-lg p-3 flex items-center gap-2 justify-center">
-                          <img
-                            src={brindeSelecionado.imagem}
-                            alt={brindeSelecionado.nome}
-                            className="w-12 h-12 rounded object-cover"
-                          />
-                          <span className="font-medium text-foreground text-sm">
-                            {brindeSelecionado.nome}
-                          </span>
+                        <div className="flex flex-wrap gap-2 justify-center">
+                          {brindesSelecionados.map((brinde) => (
+                            <div key={brinde.id} className="bg-muted rounded-lg p-3 flex items-center gap-2">
+                              <img
+                                src={brinde.imagem}
+                                alt={brinde.nome}
+                                className="w-12 h-12 rounded object-cover"
+                              />
+                              <span className="font-medium text-foreground text-sm">
+                                {brinde.nome}
+                              </span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </>

@@ -18,23 +18,26 @@
 
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import fotobanner from "@/assets/foto banner.jpg"
+import fotobanner2 from "@/assets/banner 02.jpg"
+import fotobanner3 from "@/assets/banner 03.jpg"
 
 // ===== DADOS DOS SLIDES =====
 // Substitua os placeholders pelas suas imagens e textos
 const slides = [
   {
     // Placeholder - substitua por sua imagem importada
-    imagem: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=1920&h=600&fit=crop",
+    imagem: fotobanner,
     titulo: "Eventos Inesquecíveis",
-    descricao: "Gruas de pelúcia que encantam crianças e adultos",
+    descricao: "Máquinas de prêmios que encantam crianças e adultos",
   },
   {
-    imagem: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&h=600&fit=crop",
+    imagem: fotobanner2,
     titulo: "Festas Corporativas",
     descricao: "Entretenimento de qualidade para sua empresa",
   },
   {
-    imagem: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&h=600&fit=crop",
+    imagem: fotobanner3,
     titulo: "Aniversários Especiais",
     descricao: "Transforme sua festa em uma experiência única",
   },
@@ -65,7 +68,7 @@ const HeroCarousel = () => {
   };
 
   return (
-    <section className="relative h-[500px] md:h-[600px] overflow-hidden">
+    <section className="relative h-[300px] md:h-[600px] overflow-hidden">
       {/* ===== SLIDES ===== */}
       {slides.map((slide, indice) => (
         <div
@@ -93,12 +96,7 @@ const HeroCarousel = () => {
               <p className="text-xl md:text-2xl text-primary-foreground/80 mb-8">
                 {slide.descricao}
               </p>
-              <a
-                href="#monte-seu-evento"
-                className="inline-block bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all hover:scale-105"
-              >
-                Monte seu Evento Agora
-              </a>
+              {/* CTA desativado conforme solicitado */}
             </div>
           </div>
         </div>

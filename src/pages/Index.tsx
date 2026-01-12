@@ -20,6 +20,7 @@
 import Header from "@/components/Header";
 import HeroCarousel from "@/components/HeroCarousel";
 import MonteSeuEvento from "@/components/MonteSeuEvento";
+import PlanosInformativos from "@/components/PlanosInformativos";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
@@ -35,6 +36,9 @@ const Index = () => {
         <div className="pt-16">
           {/* Banner rotativo com fotos de eventos */}
           <HeroCarousel />
+
+          {/* Informativos de planos */}
+          <PlanosInformativos />
 
           {/* Seção principal: Monte seu Evento */}
           <MonteSeuEvento />

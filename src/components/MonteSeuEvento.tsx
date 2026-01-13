@@ -26,6 +26,11 @@ import Peluciascomum from "@/assets/pelucias_comuns.png";
 import Peluciaspersonagens from "@/assets/personagens_cinema_pelucia.png";
 import PeluciasHerois from "@/assets/herois_pelucia.png";
 import Bolas from "@/assets/bolas-transparentes.webp";
+import peluciasnacionais from "@/assets/pelucias nacionais.jpg";
+import peluciaspersona from "@/assets/pelucias personalizadas.jpg";
+import peluciaspremium from "@/assets/pelucias premium.jpg";
+import totemtv from "@/assets/totem tv fundo branco.png";
+import totempoket from "@/assets/totem poket.png";
 
 // ===== NÚMERO DO WHATSAPP =====
 // Altere para o número da empresa (com código do país e DDD, sem espaços ou traços)
@@ -63,6 +68,20 @@ const maquinas = [
     descricao: "Totem de carregamento de aparelhos celulares.",
     categoria: "totem",
   },
+  {
+    id: 5,
+    nome: "Totem Tv",
+    imagem: totemtv,
+    descricao: "Totem de carregamento de aparelhos celulares.",
+    categoria: "totem",
+  },
+  {
+    id: 6,
+    nome: "Totem Poket",
+    imagem: totempoket,
+    descricao: "Totem de carregamento de aparelhos celulares.",
+    categoria: "totem",
+  },
 ];
 
 // ===== DADOS DOS BRINDES =====
@@ -71,19 +90,19 @@ const brindes = [
   {
     id: 1,
     nome: "Pelúcias Nacionais",
-    imagem: Peluciaspersonagens,
+    imagem: peluciasnacionais,
     descricao: "Modelos variados de pelúcias nacionais",
   },
   {
     id: 2,
     nome: "Pelúcias Premium",
-    imagem: Peluciascomum,
+    imagem: peluciaspremium,
     descricao: "Modelos variados de pelúcias Premium",
   },
   {
     id: 3,
     nome: "Pelúcias Personalizadas",
-    imagem: PeluciasHerois,
+    imagem: peluciaspersona,
     descricao: "Escolha as Pelúcias do seu jeito",
   },
   {

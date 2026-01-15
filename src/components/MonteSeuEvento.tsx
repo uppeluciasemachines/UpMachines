@@ -22,13 +22,10 @@ import GruaTvBox from "@/assets/grua tv box.jpg";
 import GruaLedCompt from "@/assets/GRUA COMPACTA LED.jpg";
 import GruaLed from "@/assets/grua led.jpg";
 import Totem from "@/assets/Totem de carregamento.jpg";
-import Peluciascomum from "@/assets/pelucias_comuns.png";
-import Peluciaspersonagens from "@/assets/personagens_cinema_pelucia.png";
-import PeluciasHerois from "@/assets/herois_pelucia.png";
 import Bolas from "@/assets/bolas-transparentes.webp";
-import peluciasnacionais from "@/assets/pelucias nacionais.jpg";
-import peluciaspersona from "@/assets/pelucias personalizadas.jpg";
-import peluciaspremium from "@/assets/pelucias premium.jpg";
+import peluciasnacionais from "@/assets/pelucias nacionais.webp";
+import peluciaspersona from "@/assets/pelucias personalizadas.webp";
+import peluciaspremium from "@/assets/pelucias premium.webp";
 import totemtv from "@/assets/totem tv fundo branco.png";
 import totempoket from "@/assets/totem poket.png";
 

@@ -18,9 +18,9 @@ import logoup from "@/assets/LOGO UP MACHINES - LETRA BRANCA.png";
 
 // ===== CONFIGURAÇÕES DE CONTATO =====
 // Altere estas variáveis com as informações da empresa
-const LINK_INSTAGRAM = "https://instagram.com/upmachines"; // Link do Instagram
-const NUMERO_WHATSAPP = "5511999999999"; // Número do WhatsApp
-const EMAIL_CONTATO = "contato@upmachines.com.br"; // Email de contato
+const LINK_INSTAGRAM = "https://www.instagram.com/upmachines/"; // Link do Instagram
+const NUMERO_WHATSAPP = "+5586994083920"; // Número do WhatsApp
+const EMAIL_CONTATO = "upmachinesthe@gmail.com"; // Email de contato
 
 const Footer = () => {
   return (

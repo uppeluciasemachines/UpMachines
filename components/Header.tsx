@@ -1,3 +1,5 @@
+"use client";
+
 /* ================================================================================
    COMPONENTE: Header (Cabeçalho)
    ================================================================================
@@ -35,14 +37,11 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           
-          {/* ===== ÁREA DA LOGO ===== 
-              Para adicionar sua logo:
-              1. Importe a imagem no topo do arquivo
-              2. Substitua o texto abaixo por: <img src={logoup} alt="Up Machines" className="h-10" />
-          */}
+          {/* ===== ÁREA DA LOGO ===== */}
+
           <div className="flex items-center">
             <span className="text-2xl font-bold text-primary">
-              <img src={logoup} alt="Up Machines" className="h-20" />
+              <img src={logoup.src} alt="Up Machines" className="h-20" />
             </span>
           </div>
 

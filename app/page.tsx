@@ -1,3 +1,5 @@
+"use client";
+
 /* ================================================================================
    PÁGINA PRINCIPAL - UP MACHINES
    ================================================================================
@@ -16,7 +18,6 @@
    - Para alterar o número do WhatsApp: veja WhatsAppButton.tsx e MonteSeuEvento.tsx
    ================================================================================ */
 
-// Importa os componentes da página
 import Header from "@/components/Header";
 import HeroCarousel from "@/components/HeroCarousel";
 import MonteSeuEvento from "@/components/MonteSeuEvento";
@@ -24,7 +25,7 @@ import PlanosInformativos from "@/components/PlanosInformativos";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
-const Index = () => {
+export default function Home() {
   return (
     <div className="min-h-screen">
       {/* ===== CABEÇALHO (Menu de navegação) ===== */}
@@ -47,11 +48,8 @@ const Index = () => {
 
       {/* ===== RODAPÉ ===== */}
       <Footer />
-
-      {/* ===== BOTÃO FLUTUANTE DO WHATSAPP ===== */}
-      <WhatsAppButton />
+     
     </div>
+    
   );
-};
-
-export default Index;
+}

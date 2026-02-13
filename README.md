@@ -1,73 +1,80 @@
-# Welcome to your Lovable project
+# UP Machines
 
-## Project info
+Site institucional da UP Machines - Aluguel de máquinas para eventos.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🚀 Deploy na Vercel
 
-## How can I edit this code?
+Este projeto está pronto para deploy na Vercel.
 
-There are several ways of editing your application.
+### Passos para fazer deploy:
 
-**Use Lovable**
+1. **Conecte seu repositório GitHub à Vercel:**
+   - Acesse [vercel.com](https://vercel.com)
+   - Clique em "New Project"
+   - Importe seu repositório do GitHub
+   - A Vercel detectará automaticamente que é um projeto Next.js
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+2. **Configure o projeto:**
+   - Framework Preset: **Next.js** (detectado automaticamente)
+   - Build Command: `npm run build` (já configurado)
+   - Output Directory: `.next` (padrão Next.js)
 
-Changes made via Lovable will be committed automatically to this repo.
+3. **Deploy:**
+   - Clique em "Deploy"
+   - A Vercel fará o build e deploy automaticamente
+   - Você receberá uma URL pública do seu site
 
-**Use your preferred IDE**
+### 🔄 Deploy Automático
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Após o primeiro deploy, toda vez que você fizer push para a branch `main` do GitHub, a Vercel fará deploy automaticamente da nova versão.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 💻 Desenvolvimento Local
 
-Follow these steps:
+```bash
+# Instalar dependências
+npm install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Executar servidor de desenvolvimento
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+O site estará disponível em [http://localhost:3000](http://localhost:3000)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📦 Build de Produção
 
-**Use GitHub Codespaces**
+```bash
+# Criar build de produção
+npm run build
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Executar build de produção localmente
+npm run start
+```
 
-## What technologies are used for this project?
+## 🛠️ Tecnologias
 
-This project is built with:
+- **Next.js 14** - Framework React
+- **TypeScript** - Tipagem estática
+- **Tailwind CSS** - Estilização
+- **shadcn/ui** - Componentes UI
+- **React Query** - Gerenciamento de estado
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📝 Estrutura do Projeto
 
-## How can I deploy this project?
+```
+├── app/                    # App Router do Next.js
+│   ├── layout.tsx         # Layout principal
+│   ├── page.tsx           # Página inicial
+│   ├── globals.css        # Estilos globais
+│   └── providers.tsx      # React Query Provider
+├── components/            # Componentes React
+├── hooks/                # Custom hooks
+├── lib/                  # Utilitários
+├── assets/               # Imagens
+└── public/               # Arquivos estáticos
+```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## 📧 Contato
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- **Email:** upmachinesthe@gmail.com
+- **Instagram:** [@upmachines](https://www.instagram.com/upmachines/)
+- **WhatsApp:** +55 86 99408-3920

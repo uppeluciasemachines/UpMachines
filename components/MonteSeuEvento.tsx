@@ -1,3 +1,5 @@
+"use client";
+
 /* ================================================================================
    COMPONENTE: MonteSeuEvento
    ================================================================================
@@ -114,7 +116,7 @@ const brindes = [
 interface Maquina {
   id: number;
   nome: string;
-  imagem: string;
+  imagem: string | import("next/image").StaticImageData;
   descricao: string;
   categoria: string;
 }
@@ -123,7 +125,7 @@ interface Maquina {
 interface Brinde {
   id: number;
   nome: string;
-  imagem: string;
+  imagem: string | import("next/image").StaticImageData;
   descricao: string;
 }
 
@@ -133,6 +135,8 @@ const MonteSeuEvento = () => {
   const [maquinasSelecionadas, setMaquinasSelecionadas] = useState<Maquina[]>([]); // Array de máquinas selecionadas
   const [brindesSelecionados, setBrindesSelecionados] = useState<Brinde[]>([]);
   const [maquinaEspiando, setMaquinaEspiando] = useState<Maquina | null>(null); // Para o Quick View
+  const [dataEvento, setDataEvento] = useState(""); // Data do evento
+  const [horasAluguel, setHorasAluguel] = useState(""); // Quantidade de horas
 
   // Funções auxiliares para verificar tipos de seleções
   const temMaquina = () => maquinasSelecionadas.some(m => m.categoria === "maquina");
@@ -142,8 +146,19 @@ const MonteSeuEvento = () => {
   const enviarParaWhatsApp = () => {
     if (maquinasSelecionadas.length === 0) return;
 
+    // Validar se data e horas foram preenchidas
+    if (!dataEvento || !horasAluguel) {
+      alert("Por favor, preencha a data do evento e a quantidade de horas.");
+      return;
+    }
+
     // Monta a mensagem baseada nas seleções
     let mensagem = "Olá! Gostaria de solicitar um orçamento para:\n\n";
+    
+    // Adiciona data e horas
+    const dataFormatada = new Date(dataEvento + "T00:00:00").toLocaleDateString("pt-BR");
+    mensagem += `📅 *Data do Evento:* ${dataFormatada}\n`;
+    mensagem += `⏰ *Duração:* ${horasAluguel} hora(s)\n\n`;
     
     // Adiciona máquinas selecionadas
     const maquinas = maquinasSelecionadas.filter(m => m.categoria === "maquina");
@@ -348,11 +363,14 @@ const MonteSeuEvento = () => {
                   <div className="flex items-center justify-center gap-2 mb-6 flex-wrap">
                     {maquinasSelecionadas.map((maquina, index) => (
                       <div key={maquina.id} className="bg-muted rounded-lg p-2 flex items-center gap-2">
-                        <img
-                          src={maquina.imagem}
-                          alt={maquina.nome}
-                          className="w-10 h-10 rounded object-contain"
-                        />
+                        <img src={typeof maquina.imagem === "string"
+                          ? maquina.imagem
+                          : maquina.imagem.src
+                        }
+                            alt={maquina.nome}
+                            width={40}
+                            height={40}
+                            className="w-10 h-10 rounded object-contain" />
                         <span className="font-medium text-foreground text-xs">
                           {maquina.nome}
                         </span>
@@ -393,11 +411,16 @@ const MonteSeuEvento = () => {
               <div className="flex flex-wrap gap-3">
                 {maquinasSelecionadas.map((maquina) => (
                   <div key={maquina.id} className="flex items-center gap-2 bg-muted rounded-lg p-2">
-                    <img
-                      src={maquina.imagem}
+
+                    <img src={typeof maquina.imagem === "string"
+                        ? maquina.imagem
+                        : maquina.imagem.src
+                      }
                       alt={maquina.nome}
-                      className="w-16 h-16 rounded-lg object-contain bg-background p-1"
-                    />
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 rounded-lg object-contain bg-background p-1" />
+
                     <div>
                       <p className="font-bold text-foreground text-sm">{maquina.nome}</p>
                       <p className="text-xs text-muted-foreground capitalize">{maquina.categoria}</p>
@@ -423,11 +446,14 @@ const MonteSeuEvento = () => {
                   }`}
                 >
                   <div className="relative">
-                    <img
-                      src={brinde.imagem}
+                   <img src={typeof brinde.imagem === "string"
+                    ? brinde.imagem
+                    : brinde.imagem.src
+                   }
                       alt={brinde.nome}
-                      className="w-full h-48 object-cover"
-                    />
+                      width={400}
+                      height={192}
+                      className="w-full h-48 object-cover" />
                     {brindesSelecionados.some((b) => b.id === brinde.id) && (
                       <div className="absolute top-4 right-4 bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center">
                         <Check size={20} />
@@ -496,11 +522,16 @@ const MonteSeuEvento = () => {
                           .filter(m => m.categoria === "maquina")
                           .map((maquina) => (
                             <div key={maquina.id} className="bg-muted rounded-lg p-3 flex items-center gap-2">
-                              <img
-                                src={maquina.imagem}
+
+                              <img src={typeof maquina.imagem === "string"
+                                ? maquina.imagem
+                                : maquina.imagem.src
+                              }
                                 alt={maquina.nome}
-                                className="w-12 h-12 rounded object-contain"
-                              />
+                                width={48}
+                                height={48}
+                                className="w-12 h-12 rounded object-contain" />
+
                               <span className="font-medium text-foreground text-sm">
                                 {maquina.nome}
                               </span>
@@ -518,11 +549,17 @@ const MonteSeuEvento = () => {
                           .filter(m => m.categoria === "totem")
                           .map((maquina) => (
                             <div key={maquina.id} className="bg-muted rounded-lg p-3 flex items-center gap-2">
-                              <img
-                                src={maquina.imagem}
+
+                              <img src={typeof maquina.imagem === "string"
+                                ? maquina.imagem
+                                : maquina.imagem.src
+                              }
                                 alt={maquina.nome}
+                                width={48}
+                                height={48}
                                 className="w-12 h-12 rounded object-contain"
-                              />
+                                />
+
                               <span className="font-medium text-foreground text-sm">
                                 {maquina.nome}
                               </span>
@@ -542,11 +579,14 @@ const MonteSeuEvento = () => {
                         <div className="flex flex-wrap gap-2 justify-center">
                           {brindesSelecionados.map((brinde) => (
                             <div key={brinde.id} className="bg-muted rounded-lg p-3 flex items-center gap-2">
-                              <img
-                                src={brinde.imagem}
+                              <img src={typeof brinde.imagem === "string"
+                                ? brinde.imagem
+                                : brinde.imagem.src
+                              }
                                 alt={brinde.nome}
-                                className="w-12 h-12 rounded object-cover"
-                              />
+                                width={48}
+                                height={48}
+                                className="w-12 h-12 rounded object-cover" />
                               <span className="font-medium text-foreground text-sm">
                                 {brinde.nome}
                               </span>
@@ -558,12 +598,65 @@ const MonteSeuEvento = () => {
                   )}
                 </div>
 
+                {/* Campos de Data e Horas */}
+                <div className="mt-8 mb-6 space-y-4">
+                  <div className="border-t border-muted pt-6">
+                    <h4 className="text-lg font-semibold text-foreground mb-4 text-center">
+                      Informações do Evento
+                    </h4>
+                    
+                    {/* Campo de Data */}
+                    <div className="mb-4">
+                      <label htmlFor="dataEvento" className="block text-sm font-medium text-foreground mb-2">
+                        📅 Data do Evento *
+                      </label>
+                      <input
+                        type="date"
+                        id="dataEvento"
+                        value={dataEvento}
+                        onChange={(e) => setDataEvento(e.target.value)}
+                        min={new Date().toISOString().split('T')[0]}
+                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                        required
+                      />
+                    </div>
+
+                    {/* Campo de Horas */}
+                    <div>
+                      <label htmlFor="horasAluguel" className="block text-sm font-medium text-foreground mb-2">
+                        ⏰ Quantidade de Horas *
+                      </label>
+                      <input
+                        type="number"
+                        id="horasAluguel"
+                        value={horasAluguel}
+                        onChange={(e) => setHorasAluguel(e.target.value)}
+                        placeholder="Ex: 4"
+                        min="1"
+                        max="24"
+                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Informe quantas horas você deseja alugar
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Botão de enviar para WhatsApp */}
                 <button
                   onClick={enviarParaWhatsApp}
                   className="bg-[#25D366] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#22c55e] transition-all hover:scale-105 flex items-center gap-3 mx-auto"
                 >
-                  <MessageCircle size={24} />
+                  <svg
+        className="w-12 h-7 text-white"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+      </svg>
                   Enviar Orçamento via WhatsApp
                 </button>
               </div>
@@ -582,11 +675,15 @@ const MonteSeuEvento = () => {
             className="bg-card rounded-2xl max-w-lg w-full overflow-hidden animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={maquinaEspiando.imagem}
+            <img src={typeof maquinaEspiando.imagem === "string"
+              ? maquinaEspiando.imagem
+              : maquinaEspiando.imagem.src
+            }
               alt={maquinaEspiando.nome}
-              className="w-full aspect-[4/3] object-contain bg-muted p-4"
-            />
+              width={600}
+              height={450}
+              className="w-full aspect-[4/3] object-contain bg-muted p-4"/>
+
             <div className="p-6">
               <h3 className="text-2xl font-bold text-foreground mb-2">
                 {maquinaEspiando.nome}
@@ -637,11 +734,14 @@ const CardMaquina = ({ maquina, selecionada = false, onEspiar, onSelecionar }: C
         }`}>
       {/* Imagem */}
       <div className="relative overflow-hidden">
-        <img
-          src={maquina.imagem}
+        <img src={typeof maquina.imagem === "string"
+          ? maquina.imagem
+          : maquina.imagem.src
+        }
           alt={maquina.nome}
-          className="w-full aspect-[4/3] object-contain bg-muted p-2 group-hover:scale-105 transition-transform duration-300"
-        />
+          width={600}
+          height={450}
+          className="w-full aspect-[4/3] object-contain bg-muted p-2 group-hover:scale-105 transition-transform duration-300" />
         {/* Botão Espiar (Quick View) */}
         <button
           onClick={onEspiar}

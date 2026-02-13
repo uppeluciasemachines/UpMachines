@@ -4,12 +4,17 @@ import type { Config } from "tailwindcss";
    CONFIGURAÇÃO DO TAILWIND - UP MACHINES
    ================================================================================
    Este arquivo estende o Tailwind CSS com cores e animações personalizadas.
-   As cores são definidas usando variáveis CSS do arquivo index.css
+   As cores são definidas usando variáveis CSS do arquivo globals.css
    ================================================================================ */
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -98,5 +103,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;

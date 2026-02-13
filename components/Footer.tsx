@@ -1,3 +1,5 @@
+"use client";
+
 /* ================================================================================
    COMPONENTE: Footer (Rodapé)
    ================================================================================
@@ -5,7 +7,7 @@
    
    INSTRUÇÕES PARA ADICIONAR SUA LOGO:
    1. Importe sua logo: import logo from "@/assets/sua-logo.png";
-   2. Substitua o texto pela imagem: <img src={logo} alt="Up Machines" className="h-12" />
+   2. Substitua o texto pela imagem: <Image src={logo} alt="Up Machines" className="h-20" />
    
    INSTRUÇÕES PARA ALTERAR LINKS:
    1. Altere a variável LINK_INSTAGRAM para o perfil da empresa
@@ -33,7 +35,7 @@ const Footer = () => {
             {/* Área da Logo - substitua pelo componente img quando tiver a logo */}
             <div className="mb-4">
               <span className="text-3xl font-bold text-primary">
-                <img src={logoup} alt="Up Machines" className="h-20" />
+                <img src={logoup.src} alt="Up Machines" className="h-20 w-auto" />
               </span>
             </div>
             <p className="text-primary-foreground/70 text-sm">

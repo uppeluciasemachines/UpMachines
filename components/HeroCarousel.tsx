@@ -1,3 +1,5 @@
+"use client";
+
 /* ================================================================================
    COMPONENTE: HeroCarousel (Banner Principal)
    ================================================================================
@@ -78,11 +80,9 @@ const HeroCarousel = () => {
           }`}
         >
           {/* Imagem de fundo */}
-          <img
-            src={slide.imagem}
-            alt={slide.titulo}
-            className="w-full h-full object-cover"
-          />
+          <img src={slide.imagem.src}
+              alt={slide.titulo}
+              className="w-full h-full object-cover" />
           
           {/* Overlay escuro para melhorar leitura do texto */}
           <div className="absolute inset-0 bg-secondary/60" />

@@ -22,7 +22,7 @@ import { useState } from "react";
 import { Eye, Check, MessageCircle, ArrowRight, ArrowLeft } from "lucide-react";
 import GruaTvBox from "@/assets/grua tv box.jpg";
 import GruaLedCompt from "@/assets/GRUA COMPACTA LED.jpg";
-import GruaLed from "@/assets/grua led.jpg";
+import GruaLed from "@/assets/grua led.png";
 import Totem from "@/assets/Totem de carregamento.jpg";
 import Bolas from "@/assets/bolas-transparentes.webp";
 import peluciasnacionais from "@/assets/pelucias nacionais.webp";

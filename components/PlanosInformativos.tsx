@@ -33,6 +33,17 @@ const planosMaquinas = [
       "50 brindes nacionais, com selo inmetro",
     ],
   },
+
+  {
+    titulo : "Máquina Stop 1.000",
+    preco : "R$900",
+    itens : [
+      "4 horas de evento",
+      "Asistente técnico",
+      "Jogadas ilimitadas sem custo adicional",
+      "Taxa de entrega gratuita",
+    ],
+  },
 ];
 
 const planosTotem = [

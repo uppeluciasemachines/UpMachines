@@ -30,6 +30,7 @@ import peluciaspersona from "@/assets/pelucias personalizadas.webp";
 import peluciaspremium from "@/assets/pelucias premium.webp";
 import totemtv from "@/assets/totem tv fundo branco.png";
 import totempoket from "@/assets/totem poket.png";
+import stop1000 from "@/assets/stop1000.jpeg"
 
 // ===== NÚMERO DO WHATSAPP =====
 // Altere para o número da empresa (com código do país e DDD, sem espaços ou traços)
@@ -79,6 +80,13 @@ const maquinas = [
     nome: "Totem Poket",
     imagem: totempoket,
     descricao: "Totem de carregamento de aparelhos celulares.",
+    categoria: "totem",
+  },
+  {
+    id : 7,
+    nome: "Stop 1000",
+    imagem: stop1000,
+    descricao: "Maquina de sortear numeros",
     categoria: "totem",
   },
 ];

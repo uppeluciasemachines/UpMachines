@@ -43,6 +43,8 @@ export default function Home() {
 
           {/* Seção principal: Monte seu Evento */}
           <MonteSeuEvento />
+
+          <WhatsAppButton/>
         </div>
       </main>
 

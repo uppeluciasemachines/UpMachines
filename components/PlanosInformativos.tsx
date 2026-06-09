@@ -39,7 +39,7 @@ const planosMaquinas = [
     preco : "R$900",
     itens : [
       "4 horas de evento",
-      "Asistente técnico",
+      "Assistente técnico",
       "Jogadas ilimitadas sem custo adicional",
       "Taxa de entrega gratuita",
     ],

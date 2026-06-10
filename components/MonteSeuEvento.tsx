@@ -145,6 +145,7 @@ const MonteSeuEvento = () => {
   const [maquinaEspiando, setMaquinaEspiando] = useState<Maquina | null>(null); // Para o Quick View
   const [dataEvento, setDataEvento] = useState(""); // Data do evento
   const [horasAluguel, setHorasAluguel] = useState(""); // Quantidade de horas
+  const [observacao , setObservacao] = useState("") // Campo de observação
 
   // Funções auxiliares para verificar tipos de seleções
   const temMaquina = () => maquinasSelecionadas.some(m => m.categoria === "maquina");
@@ -197,6 +198,10 @@ const MonteSeuEvento = () => {
     }
     
     // Codifica a mensagem para URL
+    if (observacao.trim()){
+      mensagem += `\n📝 *Observações:* ${observacao}`;
+    }
+
     const mensagemCodificada = encodeURIComponent(mensagem);
     
     // Abre o WhatsApp com a mensagem
@@ -645,9 +650,20 @@ const MonteSeuEvento = () => {
                         className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                         required
                       />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Informe quantas horas você deseja alugar
-                      </p>
+                    </div>
+
+                    <div className="mt-4">
+                      <label htmlFor="observacao" className="block text-sm font-medium text-foreground mb-2">
+                        📝 Observações (opcional)
+                      </label>
+                      <textarea
+                        id="observacao"
+                        value={observacao}
+                        onChange={(e)=> setObservacao(e.target.value)}
+                        placeholder="Ex: local, tema da festa..."
+                        rows={3}
+                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                      />
                     </div>
                   </div>
                 </div>

@@ -145,7 +145,8 @@ const MonteSeuEvento = () => {
   const [maquinaEspiando, setMaquinaEspiando] = useState<Maquina | null>(null); // Para o Quick View
   const [dataEvento, setDataEvento] = useState(""); // Data do evento
   const [horasAluguel, setHorasAluguel] = useState(""); // Quantidade de horas
-  const [observacao , setObservacao] = useState("") // Campo de observação
+  const [observacao , setObservacao] = useState(""); // Campo de observação
+  const [erros, setErros] = useState<{ data?: string; horas?: string }>({});
 
   // Funções auxiliares para verificar tipos de seleções
   const temMaquina = () => maquinasSelecionadas.some(m => m.categoria === "maquina");
@@ -156,10 +157,14 @@ const MonteSeuEvento = () => {
     if (maquinasSelecionadas.length === 0) return;
 
     // Validar se data e horas foram preenchidas
-    if (!dataEvento || !horasAluguel) {
-      alert("Por favor, preencha a data do evento e a quantidade de horas.");
+    const novosErros: { data?: string; horas?: string} = {};
+    if (!dataEvento) novosErros.data = "Por favor, informe a data do evento.";
+    if(!horasAluguel) novosErros.horas = "Informe a quantidade de horas do seu evento.";
+    if (Object.keys(novosErros).length > 0) {
+      setErros(novosErros);
       return;
     }
+    setErros({})
 
     // Monta a mensagem baseada nas seleções
     let mensagem = "Olá! Gostaria de solicitar um orçamento para:\n\n";
@@ -629,9 +634,9 @@ const MonteSeuEvento = () => {
                         value={dataEvento}
                         onChange={(e) => setDataEvento(e.target.value)}
                         min={new Date().toISOString().split('T')[0]}
-                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                        required
+                        className={`w-full px-4 py-3 rounded-lg border bg-background text foreground focus:outline-nome focus:ring-2 focus:ring-primary ${erros.data ? "border-red-500 ring-1 ring-red-500": "border-input"}`}
                       />
+                      {erros.data &&(<p className="text-red-500 text-xs mt-1">{erros.data}</p>)}
                     </div>
 
                     {/* Campo de Horas */}
@@ -647,9 +652,9 @@ const MonteSeuEvento = () => {
                         placeholder="Ex: 4"
                         min="1"
                         max="24"
-                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                        required
+                        className={`w-full px-4 py-3 rounded-lg border bg-background text foreground focus:outline-nome focus:ring-2 focus:ring-primary ${erros.data ? "border-red-500 ring-1 ring-red-500": "border-input"}`}
                       />
+                      {erros.data &&(<p className="text-red-500 text-xs mt-1">{erros.horas}</p>)}
                     </div>
 
                     <div className="mt-4">
